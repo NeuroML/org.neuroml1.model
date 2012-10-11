@@ -1,4 +1,4 @@
-package org.neuroml.model.test;
+package org.neuroml1.model.test;
 
 
 import java.util.List;

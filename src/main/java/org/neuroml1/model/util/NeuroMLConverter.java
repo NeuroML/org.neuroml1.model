@@ -26,7 +26,7 @@ public class NeuroMLConverter
 	
 	public NeuroMLConverter() throws Exception
 	{
-		jaxb = JAXBContext.newInstance("org.neuroml.model:org.neuroml.model.morph:org.neuroml.model.meta:org.neuroml.model.channel:org.neuroml.model.bio:org.neuroml.model.network");
+		jaxb = JAXBContext.newInstance("org.neuroml1.model:org.neuroml1.model.morph:org.neuroml1.model.meta:org.neuroml1.model.channel:org.neuroml1.model.bio:org.neuroml1.model.network");
 		//FIXME Removed :neuroml2
 		
 		marshaller = jaxb.createMarshaller();		
