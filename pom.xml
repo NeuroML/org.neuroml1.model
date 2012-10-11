@@ -6,7 +6,6 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<properties>
 		<build.version1>1.8.1</build.version1>
-		<build.version2>2alpha</build.version2>
 	</properties>
 	<dependencies>
 		<dependency>
