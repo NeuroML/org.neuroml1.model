@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    This example shows a Level 3 compliant file, containing a simple network
+-->
+
+<networkml xmlns="http://morphml.org/networkml/schema"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:meta="http://morphml.org/metadata/schema" 
+    xsi:schemaLocation="http://morphml.org/networkml/schema 
+        http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.1/Level3/NetworkML_v1.8.1.xsd"
+    length_units="micrometer">
+                        
+
+    <meta:notes>A simple network where instances of cell populations, connections, 
+    etc. are specified. Note cell morphologies and the associated channel 
+    mchanisms and synapses would be specified in separate files</meta:notes>
+
+
+    <populations>
+        <population name="PopA" cell_type="CellA">
+           <!-- All instances specified-->
+            <instances size="2">
+                <instance id="0"><location x="0" y="0" z="0"/></instance>
+                <instance id="1"><location x="10" y="0" z="0"/></instance>
+            </instances>
+        </population>
+        <population name="PopB" cell_type="CellB">
+            <!-- All instances specified-->
+            <instances size="3">
+                <instance id="0"><location x="0" y="100" z="0"/></instance>
+                <instance id="1"><location x="10" y="100" z="0"/></instance>
+                <instance id="2"><location x="20" y="100" z="0"/></instance>
+            </instances>
+        </population>
+    </populations>
+    
+    
+    <projections units="Physiological Units">
+        <projection name="NetworkConnection" source="PopA" target="PopB">
+            
+            <synapse_props synapse_type="DoubExpSynA" internal_delay="5" weight="1" threshold="-20"/>
+                
+            <connections>
+                <!-- All connection instances specified-->
+                <connection id="0" pre_cell_id="0" pre_segment_id = "1" 
+                    post_cell_id="1" post_segment_id = "0" post_fraction_along = "0.25"/>
+                <connection id="1" pre_cell_id="1" pre_segment_id = "1" post_cell_id="0">   <!-- default segment_id is 0 -->
+                    <properties weight="0.5"/>    <!-- adjusted value -->
+                </connection>
+            </connections>
+            
+        </projection>
+    </projections>
+    
+    <inputs units="SI Units">
+        
+        <input name="PulseInput">
+            <pulse_input delay="0.010" duration="0.080" amplitude="1e-11" />
+            <target population="PopA">
+                <sites>
+                    <site cell_id="0" />   <!-- default segment_id is 0, fraction_along is 0.5 -->
+                </sites>
+            </target>
+        </input>
+        
+        <input name="RandomInput">
+            <random_stim frequency="50" synaptic_mechanism="DoubExpSyn" />
+            <target population="PopB"> 
+                <sites>
+                    <site cell_id="1" segment_id = "1"/>    
+                    <site cell_id="2" segment_id = "1" fraction_along = "0.75"/>  
+                </sites>
+            </target>
+        </input>
+        
+    </inputs>
+
+
+</networkml>

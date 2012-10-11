@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+
+    The main NeuroML Level 1 v1.3 Schema file
+    This schema specifies that only MorphML.xsd and Metadata.xsd are used in Level1
+
+    This file has been developed as part of the neuroConstruct project for contribution to
+    the NeuroML initiative
+    
+    Funding for this work has been received from the Medical Research Council
+    
+    Author: Padraig Gleeson
+    
+-->
+
+
+<xs:schema targetNamespace="http://morphml.org/neuroml/schema" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:mml="http://morphml.org/morphml/schema" 
+    xmlns:meta="http://morphml.org/metadata/schema" 
+    xmlns="http://morphml.org/neuroml/schema" 
+    
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:import namespace="http://morphml.org/morphml/schema"
+        schemaLocation="../Level1/MorphML_v1.3.xsd"/>
+    <xs:import namespace="http://morphml.org/metadata/schema"
+        schemaLocation="../Level1/Metadata_v1.3.xsd"/>
+       
+
+	<xs:element name="neuroml" type="NeuroMLLevel1">
+	    <xs:annotation>
+                <xs:documentation>The root NeuroML element.</xs:documentation>
+            </xs:annotation>       
+	</xs:element>
+        
+        
+	<xs:complexType name="NeuroMLLevel1">
+            <xs:annotation>
+                <xs:documentation>Description of cells compliant to NeuroML Level1.</xs:documentation>
+            </xs:annotation>
+
+            <xs:sequence>
+                <xs:group ref="meta:metadata"/>
+                <xs:group ref="meta:referencedata"/>
+
+                <xs:element name="cells" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Collection of all Level 1 cells.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="cell" type="mml:Cell" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>A single cell specified in MorphML</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                
+            </xs:sequence>
+
+
+            <xs:attribute name="name" type="xs:string" use="optional"/>
+
+
+            <xs:attribute name="lengthUnits" type="meta:LengthUnits" use="required">
+                    <xs:annotation>
+                            <xs:documentation>Unit of all length measurements.</xs:documentation>
+                    </xs:annotation>
+            </xs:attribute>
+
+
+            <xs:attribute name="volumeUnits" type="meta:VolumeUnits" use="optional" default="cubic_millimetre">
+                    <xs:annotation>
+                            <xs:documentation>Unit of all volume measurements.</xs:documentation>
+                    </xs:annotation>
+            </xs:attribute>
+
+
+	</xs:complexType>
+    
+        
+</xs:schema>

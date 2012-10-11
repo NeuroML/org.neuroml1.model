@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://morphml.org/biophysics/schema" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://morphml.org/biophysics/schema" 
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+    
+<!--
+    This file specifies a number of elements needed by NeuroML v1.3 Level 2 compliant files
+
+    This file has been developed as part of the neuroConstruct and NeuroML initiatives
+    
+    Funding for this work has been received from the Medical Research Council
+    
+    Author: Padraig Gleeson
+    
+-->
+      <xs:annotation>
+        <xs:documentation>Definition of the elements needed for specifying the biophysical properties of cells.
+     These elements are linked with those in MorphML.xsd and from the ChannelML spec by 
+     the NeuroML.xsd file</xs:documentation>
+         </xs:annotation> 
+
+	<xs:element name="biophysics" type="Biophysics">
+		<xs:annotation>
+			<xs:documentation>The root element. All other complex/simple elements will be children of this.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+        
+	<xs:complexType name="Biophysics">
+		<xs:annotation>
+			<xs:documentation>Description of biophysical properties of a cell.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="mechanism" type="Mechanism" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="specificCapacitance" type="SpecCapacitance"/>
+			<xs:element name="specificAxialResistance" type="SpecAxialResistance"/>
+			<xs:element name="initialMembPotential" type="InitialMembPotential" minOccurs="0"/>
+			<xs:element name="ionProperties" type="IonProperties" minOccurs="0"/>
+		</xs:sequence>
+                
+                 <xs:attribute name="units" type="Units" use="required">
+                    <xs:annotation>
+                        <xs:documentation>Unit system of all quantities.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>   
+	</xs:complexType>
+        
+        <xs:complexType name="Mechanism">
+		<xs:annotation>
+			<xs:documentation>Definition of placement of a single electrophysiological mechanism (e.g. channel mechanism)
+                        on a group of cables of a cell</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameter" type="NamedParameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="MechanismType" use="required"/>
+	</xs:complexType>  
+        
+        
+        
+        <xs:complexType name="SpecCapacitance">
+		<xs:annotation>
+			<xs:documentation>Capacitance per unit area of a group of sections</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameter" type="UnnamedParameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>  
+        
+        
+        <xs:complexType name="SpecAxialResistance">
+		<xs:annotation>
+			<xs:documentation>Specific axial resistance of a group of sections</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameter" type="UnnamedParameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>  
+        
+        
+        <xs:complexType name="InitialMembPotential">
+		<xs:annotation>
+			<xs:documentation>This quantity is often required for computational simulations and specifies the potential
+                difference across the membrane at the start of the simulation. This is an optional field</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameter" type="UnnamedParameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>  
+        
+        <xs:complexType name="IonProperties">
+		<xs:annotation>
+			<xs:documentation>Some properties accociated with an ion type which takes part in the mechanisms on the cell</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameter" type="NamedParameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>  
+        
+        
+        
+        <xs:complexType name="NamedParameter">
+		<xs:annotation>
+			<xs:documentation>Definition of a value for a quantity and the associated groups of cables 
+                        which have this value</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+                            <xs:element name="group" type="xs:string" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:double" use="required"/>
+	</xs:complexType>  
+        
+        
+        <!--
+        <xs:complexType name="IonParameter">
+		<xs:annotation>
+			<xs:documentation>NamedParameter restricted to params for ions</xs:documentation>
+                </xs:annotation>
+                <xs:complexContent>
+                    <xs:restriction base="NamedParameter">
+                        <xs:sequence>
+                        <xs:element name="group">
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="yes"/>
+                                <xs:enumeration value="no"/>
+                            </xs:restriction>
+                        </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:double" use="required"/>
+                    </xs:restriction>
+                </xs:complexContent>
+        </xs:complexType> -->
+        
+        
+        
+        <xs:complexType name="UnnamedParameter">
+		<xs:annotation>
+			<xs:documentation>Definition of a value for a quantity and the associated groups of cables 
+                        which have this value. The quantity referred to will be clear from the usage, e.g. InitialMembPotential</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="group" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="value" type="xs:double" use="required"/>
+	</xs:complexType>  
+    
+    
+          <!-- Definition of MechanismType follows. -->
+        <xs:simpleType name="MechanismType">
+            <xs:annotation>
+                <xs:documentation>Specifies the type of cellular mechanism. Note could be used for any type of electrophysiological
+                property of a section of a cell</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Channel Mechanism">
+                    <xs:annotation>
+                        <xs:documentation>Voltage and/or conductance dependent membrane conductance</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Ion Concentration">
+                    <xs:annotation>
+                        <xs:documentation>Mechanism which alters the oncentration of a specific ion</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <!--
+                <xs:enumeration value="Potential Synaptic Connection Location">
+                    <xs:annotation>
+                        <xs:documentation>Specifies that a synapse of the named type is allowed on this section</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Specific Axial Resistance">
+                    <xs:annotation>
+                        <xs:documentation>Spec Axial resistance of the section</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Specific Capacitance">
+                    <xs:annotation>
+                        <xs:documentation>Spec Capacitance of membrane</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="Initial Membrane Potential">
+                    <xs:annotation>
+                        <xs:documentation>Default starting potential for simulations</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>-->
+            </xs:restriction>
+        </xs:simpleType> 
+        
+        
+
+        <!-- Definition of Units follows. -->
+        <xs:simpleType name="Units">
+            <xs:annotation>
+                <xs:documentation>Enumeration of unit scheme used. Initially only SI or physiological units allowed</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Physiological Units"/>
+                <xs:enumeration value="SI Units"/>
+            </xs:restriction>
+        </xs:simpleType>
+        
+</xs:schema>

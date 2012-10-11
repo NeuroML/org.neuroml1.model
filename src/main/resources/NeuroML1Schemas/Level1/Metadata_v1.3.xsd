@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://morphml.org/metadata/schema" 
+xmlns="http://morphml.org/metadata/schema" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+   
+<!--
+
+    This file specifies a number of basic elements which can be used by NeuroML v1.3 compliant files
+    
+    Authors: Sharon Crook, Joe Svitak, Padraig Gleeson and members of the NeuroML initiative
+    
+-->
+      <xs:annotation>
+        <xs:documentation>Definition of elements common to a number of NeuroML files.</xs:documentation>
+         </xs:annotation>
+	
+	
+	<xs:complexType name="Point">
+		<xs:annotation>
+			<xs:documentation>A 3D point with optional diameter.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="x" type="xs:double" use="required"/>
+		<xs:attribute name="y" type="xs:double" use="required"/>
+		<xs:attribute name="z" type="xs:double" use="required"/>
+		<xs:attribute name="diameter" type="xs:double" use="optional"/>
+	</xs:complexType>
+        
+	<!-- Definition of Points follows. -->
+	<xs:complexType name="Points">
+		<xs:annotation>
+			<xs:documentation>A collection of points.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="point" type="Point" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+        
+	
+	<!-- Definition of Sphere follows. -->
+	<xs:complexType name="Sphere">
+		<xs:annotation>
+			<xs:documentation>A spherical structure such as a cell body or cell.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="center" type="Point">
+				<xs:annotation>
+					<xs:documentation>Diameter of sphere is obtained from center Point.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+        
+    
+        
+        
+	<!-- Definition of Manifold follows. -->
+	<xs:complexType name="Manifold">
+		<xs:annotation>
+			<xs:documentation>A surface.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="Points"/>
+		</xs:complexContent>
+	</xs:complexType>
+        
+
+        
+        
+	<!-- Definition of Polygon follows. -->
+	<xs:complexType name="Polygon">
+		<xs:annotation>
+			<xs:documentation>A closed structure represented by a list of points where the first point connects with the last point.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="Points"/>
+		</xs:complexContent>
+	</xs:complexType>
+        
+        
+	<!-- Definition of Polyhedron follows. -->
+	<xs:complexType name="Polyhedron">
+		<xs:annotation>
+			<xs:documentation>A 3d surface to represent the cell body or histological structure.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="polygons">
+				<xs:annotation>
+					<xs:documentation>Collection of polygons defining the polyhedron.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="polygon" type="Polygon" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+        
+        
+        
+	<!-- Definition of Annotation follows -->
+	<xs:complexType name="Annotation">
+		<xs:annotation>
+			<xs:documentation>Concise processing directives for downstream applications.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+        
+        
+	<!-- Definition of LengthUnits follows. -->
+	<xs:simpleType name="LengthUnits">
+		<xs:annotation>
+			<xs:documentation>Enumeration of length units. Used in MorphML Level 1 files, where length is the only important dimension.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="micron"/>
+			<xs:enumeration value="millimetre"/>
+			<xs:enumeration value="metre"/>
+		</xs:restriction>
+	</xs:simpleType>
+        
+        
+	<!-- Definition of VolumeUnits follows. -->
+	<xs:simpleType name="VolumeUnits">
+		<xs:annotation>
+			<xs:documentation>Enumeration of volume units.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="cubic_millimetre"/>
+			<xs:enumeration value="millilitre"/>
+			<xs:enumeration value="litre"/>
+		</xs:restriction>
+	</xs:simpleType>
+        
+        
+	<!-- Definition of Notes follows. -->
+	<xs:simpleType name="Notes">
+		<xs:annotation>
+			<xs:documentation>Textual human readable notes related to the element in question</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+        
+        
+	<!-- Definition of Group follows. -->
+	<xs:simpleType name="Group">
+		<xs:annotation>
+			<xs:documentation>Allows elements to be associated, such as for grouping segments or cables into the basal arbor.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+        
+        
+	<!-- Definition of Property follows. -->
+	<xs:complexType name="Property">
+		<xs:annotation>
+			<xs:documentation>A Tag/Value/Type tuple.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="tag" type="xs:string"/>
+			<xs:element name="value" type="xs:string"/>
+		</xs:all>
+	</xs:complexType>
+        
+        
+	<!-- Definition of Properties follows. -->
+	<xs:complexType name="Properties">
+		<xs:annotation>
+			<xs:documentation>A collection of Properties</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="property" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+        
+        
+	<!-- Definition of PropertyDetail follows. -->
+	<xs:complexType name="PropertyDetail">
+		<xs:annotation>
+			<xs:documentation>Metadata for each Property.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="description" type="xs:string"/>
+			<xs:element name="type" type="xs:anyType"/>
+		</xs:all>
+		<xs:attribute name="property" type="xs:string"/>
+	</xs:complexType>
+        
+        
+	<!-- Definition of GroupDetail follows. -->
+	<xs:complexType name="GroupDetail">
+		<xs:annotation>
+			<xs:documentation>Metadata for each Group.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="description" type="xs:string"/>
+			<xs:element name="properties" type="Properties" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="group" type="xs:string"/>
+	</xs:complexType>
+        
+	<!-- Definition of metadata follows. -->        
+	<xs:group name="metadata">
+		<xs:annotation>
+			<xs:documentation>General metadata which can be applied to a number of elements</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="notes" type="Notes" minOccurs="0"/>
+			<xs:element name="properties" type="Properties" minOccurs="0"/>
+			<xs:element name="annotation" type="Annotation" minOccurs="0"/>
+			<xs:element name="group" type="Group" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:group>
+        
+        
+        <!-- Definition of YesNo follows. -->
+        <xs:simpleType name="YesNo">
+            <xs:annotation>
+                <xs:documentation>String with only yes or no allowed</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="yes"/>
+                <xs:enumeration value="no"/>
+            </xs:restriction>
+        </xs:simpleType>
+               
+        
+        <!-- Definition of ZeroToOne follows. -->
+        <xs:simpleType name="ZeroToOne">
+            <xs:annotation>
+                <xs:documentation>Double restricted to between 1 and 0</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:double">      
+                <xs:minInclusive value="0"/>
+                <xs:maxInclusive value="1"/>
+            </xs:restriction>
+        </xs:simpleType>
+        
+        
+        
+        
+        
+        
+        
+        <!-- Possible reference extensions. -->
+        
+        
+	<xs:group name="referencedata">
+		<xs:annotation>
+			<xs:documentation>General metadata about references for the model. 
+                            Note: This element will most likely change when a new set of schema 
+                            files is adopted for adding references, authors, citations, etc.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="publication" type="Publication" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="neuronDBref" type="NeuronDBReference" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>        
+        
+        
+	<xs:complexType name="NeuronDBReference">
+		<xs:annotation>
+			<xs:documentation>A reference to an entity in NeuronDB 
+                            Note: This element will most likely change when a new set of schema 
+                            files is adopted for adding references, authors, citations, etc.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="modelName" type="xs:string"/>
+			<xs:element name="uri" type="xs:string"/>
+		</xs:all>
+	</xs:complexType>         
+          
+	<xs:complexType name="Publication">
+		<xs:annotation>
+			<xs:documentation>A reference to a publication 
+                            Note: This element will most likely change when a new set of schema 
+                            files is adopted for adding references, authors, citations, etc.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="fullTitle" type="xs:string"/>
+			<xs:element name="pubmedRef" type="xs:string"/>
+		</xs:all>
+	</xs:complexType>        
+        
+        
+        
+        
+
+</xs:schema>

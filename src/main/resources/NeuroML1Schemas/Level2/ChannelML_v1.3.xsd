@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://morphml.org/channelml/schema" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns="http://morphml.org/channelml/schema" 
+    xmlns:meta="http://morphml.org/metadata/schema" 
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+    
+    
+<!--
+
+    This file specifies the form of ChannelML v1.3 compliant files
+
+    This file has been developed as part of the neuroConstruct and NeuroML initiatives
+    
+    Authors: Padraig Gleeson, Michael Hines
+    
+-->
+
+    <xs:import namespace="http://morphml.org/metadata/schema"
+    schemaLocation="../Level1/Metadata_v1.3.xsd"/>
+        
+        
+    <xs:annotation>
+        <xs:documentation>Definition of the elements needed for specifying electrophysiological 
+        cellular mechanisms. Voltage/concentration dependent channels can be 
+        specified, but also activity dependent ion concentrations (e.g. decaying calcium pools)
+        and (eventually) synaptic mechanisms.
+         
+        The mechanisms which can be specified by this schema can be mapped on into the scripting 
+        languages of a number of common simulation platforms, e.g. NEURON, GENESIS. This mapping
+        can be done a number of XML based ways, but XSL mappings are included with the 
+        NeuroMLValidator code.
+      
+        The elements outlined below are linked together with with those in MorphML.xsd 
+        and Biophysics.xsd in the NeuroML.xsd file to make Level 2 compliant NeuroML files</xs:documentation>
+    </xs:annotation>  
+               
+    <xs:element name="channelml" type="ChannelML">
+        <xs:annotation>
+            <xs:documentation>The root element of any ChannelML file.</xs:documentation>
+        </xs:annotation>     
+    </xs:element>
+    
+
+    <xs:complexType name="ChannelML">
+        <xs:annotation>
+            <xs:documentation>Root element containing the ions used in the channel mechanism, the unit system of the 
+            file (as attribute), and information on channels and/or ion concentration dynamics</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+            <xs:element name="ion" type="Ion" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="channel_type" type="ChannelType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="synapse_type" type="SynapseType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="ion_concentration" type="IonConcentration" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+             
+        <xs:attribute name="units" type="Units" use="required">
+            <xs:annotation>
+                <xs:documentation>Unit system of all quantities. Only SI or Physiological units are allowed!</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>   
+           
+    </xs:complexType>
+
+
+
+    <xs:complexType name="ChannelType">
+        <xs:annotation>
+            <xs:documentation>Definition of a voltage/concentration dependent cell membrane conductance</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata">
+                <xs:annotation>
+                    <xs:documentation>Some metadata (notes, etc.) to describe the conductance. </xs:documentation>
+                </xs:annotation>
+            </xs:group>
+                                
+            <xs:group ref="meta:referencedata"/> 
+            
+            <xs:element name="current_voltage_relation" type="CurrentVoltageRelation"/>
+            
+        
+            <xs:element name="hh_gate" type="HHGate" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="ks_gate" type="KSGate" minOccurs="0" maxOccurs="unbounded"/>
+            
+            <xs:element name="impl_prefs" type="ImplementationPrefs" minOccurs="0"/>
+          
+            
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="density" type="meta:YesNo" />
+    </xs:complexType>     
+
+
+    <xs:complexType name="SynapseType">
+        <xs:annotation>
+            <xs:documentation>Definition of a synaptic process</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata">
+                <xs:annotation>
+                    <xs:documentation>Some metadata (notes, etc.) to describe the synapse. </xs:documentation>
+                </xs:annotation>
+            </xs:group>
+            
+            <xs:group ref="meta:referencedata"/>
+            
+            <xs:choice>
+                <xs:annotation>
+                    <xs:documentation>Either the basic DoubleExponentialSynapse, a blocking synapse or more complex PlasticSynapse</xs:documentation>
+                </xs:annotation>
+                <xs:element name="doub_exp_syn" type="DoubleExponentialSynapse"/>
+                <xs:element name="blocking_syn" type="BlockingSynapse"/>
+                <xs:element name="plastic_syn" type="PlasticSynapse"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="density" type="meta:YesNo" />
+    </xs:complexType>  
+    
+    
+       
+    
+    <xs:complexType name="DoubleExponentialSynapse">
+        <xs:annotation>
+            <xs:documentation>A basic synaptic mechanism with an exponential rise and exponential decay. This mechanism maps 
+            easily on to mechanisms in both NEURON and GENESIS</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+        </xs:sequence>
+        <xs:attribute name="max_conductance" type="xs:double" use="required"/>
+        <xs:attribute name="rise_time" type="xs:double" use="required">
+            <xs:annotation>
+                <xs:documentation>The characteristic rise time of the conductance waveform
+                    <meta:units>s</meta:units>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="decay_time" type="xs:double" use="required"/>
+        <xs:attribute name="reversal_potential" type="xs:double" use="required"/>
+    </xs:complexType>       
+       
+    
+    <xs:complexType name="BlockingSynapse">
+        <xs:annotation>
+            <xs:documentation>A synaptic mechanism whose conductance can be blocked by the presence of a specific substance. Based on the
+            mechanism for blocking of an NMDA receptor by Mg as outlined in Gabbiani et al, 1994, Maex DeSchutter 1998</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="DoubleExponentialSynapse">
+              <xs:sequence>
+                <xs:element name="block" type="Block"/>
+              </xs:sequence>
+            </xs:extension>
+          </xs:complexContent>        
+    </xs:complexType>    
+        
+    <xs:complexType name="Block">
+        <xs:annotation>
+            <xs:documentation>Specification for the influence of a blocking substance on the conductance of a BlockingSynapse. Based on the
+            mechanism for blocking of an NMDA receptor by Mg as outlined in Gabbiani et al, 1994, Maex DeSchutter 1998</xs:documentation>
+        </xs:annotation>     
+        <xs:attribute name="ion" type="xs:string" use="required"/> 
+    </xs:complexType>    
+    
+    
+    
+       
+    
+    <xs:complexType name="PlasticSynapse">
+        <xs:annotation>
+            <xs:documentation>A more complex synaptic mechanism featuring up to 4 exponential components, facilitation and recovery, and 
+            desensitisation. Currently there is only an implementation of this in a NEURON mod file</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+            <xs:element name="plasticity" type="Plasticity" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="max_conductance" type="xs:double" use="required"/>
+        <xs:attribute name="rise_time" type="xs:double" use="required"/>
+        <xs:attribute name="decay_time_1" type="xs:double" use="required"/>
+        <xs:attribute name="decay_time_2" type="xs:double" use="optional"/>
+        <xs:attribute name="decay_time_3" type="xs:double" use="optional"/>
+        <xs:attribute name="reversal_potential" type="xs:double" use="required"/>
+    </xs:complexType>
+   
+ 
+    <xs:complexType name="Plasticity">
+        <xs:annotation>
+            <xs:documentation>Measure of the plasticity of the synaptic mechanism</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="init_release_prob" type="xs:double" use="required"/>
+        <xs:attribute name="tau_rec" type="xs:double" use="required"/>
+        <xs:attribute name="tau_fac" type="xs:double" use="required"/>
+    </xs:complexType>  
+
+
+
+    <xs:complexType name="CurrentVoltageRelation">
+        <xs:annotation>
+            <xs:documentation>How the current through the channel depends on the conductance of the channel. 
+            Only ohmic supported at the moment</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="ohmic" type="Ohmic" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+
+
+
+    <xs:complexType name="Ohmic">
+        <xs:annotation>
+            <xs:documentation>Signifies an ohmic relation; the current is proportional to the potential difference across the channel</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="conductance">  
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="rate_adjustments" type="RateAdjustments" minOccurs="0"/>   
+                        <xs:element name="gate" type="Gate" minOccurs="0" maxOccurs = "unbounded"/>   
+                        
+                    </xs:sequence>
+                    <xs:attribute name="default_gmax" type="xs:double"/>
+                </xs:complexType>
+                      
+            </xs:element>
+                        
+        </xs:sequence>
+    
+        <xs:attribute name="NonSpecific" type="xs:string"  use="optional"/>
+        <xs:attribute name="ion" type="xs:string"  use="optional"/>
+    </xs:complexType>       
+
+
+    
+
+    <xs:complexType name="ImplementationPrefs">
+        <xs:annotation>
+            <xs:documentation>These items ideally shouldn't be in a specification which deals with 
+            a description of the physiology of the channel. However, some channels won't be properly
+            implemented in the scripting mechanism of given simulator using the standard mappings
+            unless these factors are taken into account, e.g. if the rate equations change rapidly,
+            but the default table size isn't large enough.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="comment" minOccurs="0" type="xs:string">  
+                <xs:annotation>
+                    <xs:documentation>Dedicated comment element to give explination for the implementation preferences</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="table_settings" minOccurs="0">  
+                <xs:annotation>
+                    <xs:documentation>Preferences for the table of values for the rate equations, e.g. used in the TABLE statement in NMODL, or in tabchannel GENESIS objects</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:attribute name="max_v" type="xs:double" default="70">
+                        <xs:annotation>
+                            <xs:documentation>The maximum potential from which to calculate the tables of rate values</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>  
+                    <xs:attribute name="min_v" type="xs:double" default="-100">
+                        <xs:annotation>
+                            <xs:documentation>The minimum potential from which to calculate the tables of rate values</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>   
+                    <xs:attribute name="table_divisions" type="xs:integer" default="200">
+                        <xs:annotation>
+                            <xs:documentation>The number of divisions in the table</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>     
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RateAdjustments">
+        <xs:annotation>
+            <xs:documentation>Adjustments necessary to all the rate equations, e.g 
+            temperature dependencies, voltage offsets introduced when moving 
+            between species, etc. See the XSL mappings for more information on the 
+            meaning of these adjustments</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+
+            <xs:element name="q10_settings" minOccurs="0">  
+                <xs:complexType>
+                
+                    <xs:attribute name="q10_factor" type="xs:double" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>Q10 factor if the cell is to be run at a different temp than that at which 
+                            the alpha and beta were determined</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    
+                    <xs:attribute name="experimental_temp" type="xs:double" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>The experimental temperature at which alpha and beta rate 
+                            equations were determined were measured</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    
+                </xs:complexType>
+            </xs:element>	
+
+            <xs:element name="offset" minOccurs="0">  
+                <xs:complexType>
+                    <xs:attribute name="value" type="xs:double">
+                        <xs:annotation>
+                            <xs:documentation>Offset introduced to alter voltage dependence of 
+                            rate equations, see NEURON/GENESIS mappings for details</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+
+        </xs:sequence>
+    </xs:complexType>  
+
+
+
+    <xs:complexType name="Ion">
+        <xs:annotation>
+            <xs:documentation>Definition of an ion which is involved in this channel mechanism</xs:documentation>
+        </xs:annotation>
+        <xs:group ref="meta:metadata">
+            <xs:annotation>
+                <xs:documentation>Some metadata (notes, etc.) to describe the conductance. </xs:documentation>
+            </xs:annotation>
+        </xs:group>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Simple name for the ion. Due to the conventions used in NEURON, it is usually best to use 
+                the lower case form of the chemical symbol, e.g. na, ca, k</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="default_erev" type="xs:double"  use="optional">
+            <xs:annotation>
+                <xs:documentation>Most implementations of these channel mechanisms (e.g. a mod file) will need a value for the
+                reversal potential for the ion which flows through the channel. However, this is a property of the cell, as opposed to the channel.
+                For convenience though, a typical value can be used here, so a pretty self contained script can be produced, but when used in a real cell the
+                actual value for erev must be calculated</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="charge" type="xs:integer" use="required">
+            <xs:annotation>
+                <xs:documentation>Electrical charge of the ion in question
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="role" type="IonRole" use="optional" default="PermeatedSubstance">
+            <xs:annotation>
+                <xs:documentation>What role the ion plays in the dynamics of the channel/cell mechanism</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+        
+    <xs:simpleType name="IonRole">
+        <xs:annotation>
+            <xs:documentation>Role ion plays in cellular mechanism, e.g. ion passes through the channel (Na, K), or the 
+            concentration of the ion is a factor in the rate equations of gating, or the mechanism alters 
+            the concentration of this ion. This greatly simplifies the number of roles an ion can play 
+            in the channel, but these three options cover the majority of cases currently being modelled. Note: the term subtance is used as 
+            this formalism can also be used for other chemicals which may be transmitted, modulate channels, etc.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PermeatedSubstance">
+                <xs:annotation>
+                    <xs:documentation>Ion passes through the channel, e.g. Na ions permeate through an "Na Channel"</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ModulatingSubstance">
+                <xs:annotation>
+                    <xs:documentation>Concentration of ion/substance modulates dynamics/rate equations of channel, e.g. Ca dependent K channel, K permeates, but the rate is dependent on concentration of internal Ca</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SignallingSubstance">
+                <xs:annotation>
+                    <xs:documentation>Ion/substance is involved in internal signalling in the cell and the mechanism can alter its concentration, e.g. exponentially decaying Ca pool</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    
+
+
+
+    <xs:complexType name="Gate">
+        <xs:annotation>
+            <xs:documentation>Definition of a single voltage/concentration dependent gate</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="state" maxOccurs="2">  
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string"/>
+                    <xs:attribute name="fraction" type="xs:double"/>
+                </xs:complexType>                
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="power" type="xs:integer" use="required"/>
+    </xs:complexType>
+    
+
+
+    <xs:complexType name="HHGate">
+        <xs:annotation>
+            <xs:documentation>Gate with Hodgkin Huxley like state transitions</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="transition" type="Transition"/>
+        </xs:sequence>
+        <xs:attribute name="state" type="xs:string" use="required"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="KSGate">
+        <xs:annotation>
+            <xs:documentation>Gate with kinetic scheme transitions</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="state" type="KSState" maxOccurs="unbounded"/>
+            <xs:element name="transition" type="Transition" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    
+    <xs:complexType name="KSState">
+        <xs:annotation>
+            <xs:documentation>Single kinetic scheme state. Transitions will happen between these states</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    
+    
+    
+    
+    <xs:complexType name="Transition">
+        <xs:annotation>
+            <xs:documentation>What causes the gate to open and close. A dependence on potential difference, 
+            or a voltage and (ion) concentration dependence</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="voltage_gate" type="VoltageGate"/>
+            <xs:element name="voltage_conc_gate" type="VoltageConcGate"/>
+        </xs:choice>
+        <xs:attribute name="src" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>Source state of the transition if used in kinetic scheme. Must be used with attribute target</xs:documentation>
+            </xs:annotation> 
+        </xs:attribute>
+        <xs:attribute name="target" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>Target state of the transition if used in kinetic scheme. Must be used with attribute src</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>    
+
+
+
+
+    <xs:complexType name="VoltageGate">
+        <xs:annotation>
+            <xs:documentation>Definition of a voltage gate. Normally this will be specified as rate equations for alpha and beta,
+            or for tau and inf</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence> 
+            <!-- Usually the alpha & beta form are specified/known, but tau and inf could be used instead-->
+            <xs:group ref="AlphaBetaForm" minOccurs="0"/>  
+                      
+            <!-- Note: one of tau or inf could be specified even if alpha and beta are given-->
+            <xs:element name="tau" type="RateConstantEqnChoice" minOccurs="0"/>  
+            <xs:element name="inf" type="RateConstantEqnChoice" minOccurs="0"/>  
+        </xs:sequence>
+    </xs:complexType>  
+
+
+
+    <xs:complexType name="VoltageConcGate">
+        <xs:annotation>
+            <xs:documentation>Definition of a mechanics of a gate which depends on voltage and concentration (e.g. Calcium conc dependent K channel). 
+            Normally this will be specified as rate equations for alpha and beta (in terms of v and conc), or for tau and inf</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="conc_dependence" type="ConcDependence"/> 
+            
+            <!-- Usually the alpha & beta form are specified/known, but tau and inf could be used instead-->
+            <xs:group ref="AlphaBetaFormVoltConcDep" minOccurs="0"/>  
+                      
+            <!-- Note: one of tau or inf could be specified even if alpha and beta are given-->
+            <xs:element name="tau" type="RateConstVoltConcDep" minOccurs="0"/>  
+            <xs:element name="inf" type="RateConstVoltConcDep" minOccurs="0"/>  
+     
+        </xs:sequence>
+    </xs:complexType>  
+    
+    
+
+    <xs:complexType name="ConcDependence">
+        <xs:annotation>
+            <xs:documentation>Specification of what a gate is dependent on the concentration of</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Name of substance, just for reference</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="ion" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>If the substance is an ion, here is a reference the entry in the ion list at the start of the file</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="variable_name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>How the value of conductance will be expressed in the rate equations</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="min_conc" type="xs:double" use="required">
+            <xs:annotation>
+                <xs:documentation>Minimum expected concentration. Quite likely to be needed by simulators (e.g. for generating tables)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="max_conc" type="xs:double" use="required">
+            <xs:annotation>
+                <xs:documentation>Maximum expected concentration. Quite likely to be needed by simulators (e.g. for generating tables)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    
+    <xs:group name="AlphaBetaForm">
+        <xs:annotation>
+            <xs:documentation>alpha, beta form of rate equations. These will always be together if present</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="alpha" type="RateConstantEqnChoice"/>  
+            <xs:element name="beta" type="RateConstantEqnChoice"/>  
+        </xs:sequence>
+    </xs:group>
+    
+    
+    
+    <xs:group name="AlphaBetaFormVoltConcDep">
+        <xs:annotation>
+            <xs:documentation>alpha, beta form of rate equations of voltage and conc dependent channels. These will always be together if present</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="alpha" type="RateConstVoltConcDep"/>  
+            <xs:element name="beta" type="RateConstVoltConcDep"/>  
+        </xs:sequence>
+    </xs:group>
+        
+
+
+    <xs:complexType name="RateConstantEqnChoice">
+        <xs:annotation>
+            <xs:documentation>Choice of the various rate constant expressions allowed</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="parameterised_hh" type="AkdEquation"/>
+            <xs:element name="generic_equation_hh" type="GenericEquation"/>
+        </xs:choice>
+    </xs:complexType>   
+
+    
+    <xs:complexType name="RateConstVoltConcDep">
+        <xs:annotation>
+            <xs:documentation>Rate constant expressions allowed for voltage and conc dependent channels. Note, at this stage no
+            Akd like expression for a generic voltage/conc dep experssion. Time will tell if there's an expression common enough 
+            accross different models to be expressed in such a way</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="generic_equation_hh" type="GenericEquation"/>
+        </xs:choice>
+    </xs:complexType>         
+
+
+
+    <xs:complexType name="RateConstantEqn">
+        <xs:annotation>
+            <xs:documentation>Definition of a rate constant equation. This is currently onlu used when mapped to either
+            AkdEquation or GenericEquation</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="parameter" type="Parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>A parameter which is used in the equation</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="expr" type="xs:string"/>
+    </xs:complexType>  
+
+
+    <xs:complexType name="AkdEquation">
+        <xs:annotation>
+            <xs:documentation>Definition of a type of rate constant equation which takes parameters A, k, d 
+            and maps to either exponential, sigmoidal or linoidal.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="RateConstantEqn">
+                <xs:sequence>
+                    <xs:element name="parameter" type="Parameter" minOccurs="3" maxOccurs="3"/>
+                </xs:sequence>
+                <xs:attribute name="type" type="CoreEquationType" use="required"/>
+                <xs:attribute name="expr" type="xs:string"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>          
+
+
+
+    <xs:complexType name="GenericEquation">
+        <xs:annotation>
+            <xs:documentation>Definition of a type of rate constant equation</xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>Note: no parameters allowed!!</xs:documentation>
+            </xs:annotation>
+            <xs:element name="parameter" type="Parameter" minOccurs="0" maxOccurs="0"/>
+        </xs:sequence>
+            
+        <xs:attribute name="expr" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Note: only variable allowed in expression is v (or for an expression for tau or inf,
+                alpha and beta can be used too). Also, liberal use of brackets, e.g. 5.0*(exp (-50*(v +46))) instead 
+                of 5.0* exp (-50*(v +46)) is advised, due to GENESIS's handling of exp, abs, etc. </xs:documentation>
+            </xs:annotation>
+            
+        </xs:attribute>
+
+    </xs:complexType>  
+    
+    
+    
+    
+    <xs:complexType name="IonConcentration">
+        <xs:annotation>
+            <xs:documentation>Concentration of a particular ion species, the concentration 
+            of which affects some channels</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>Some metadata to describe the ion concentration</xs:documentation>
+            </xs:annotation>
+            <xs:group ref="meta:metadata"/>
+            
+            <xs:group ref="meta:referencedata"/> <!-- ppppp one recent change...-->   
+            
+            <xs:element name="ion_species" type="xs:string"/>
+            <xs:choice>
+                <xs:annotation>
+                    <xs:documentation>At present there is only one choice of a model for this process,
+                    more can be added later</xs:documentation>
+                </xs:annotation>
+                <xs:element name="decaying_pool_model" type="DecayingPoolModel"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType> 
+    
+    
+    <xs:complexType name = "DecayingPoolModel">
+        <xs:annotation>
+            <xs:documentation>Element for parameters in a decaying pool model of ion concentration (e.g. calcium pool)</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="resting_conc" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>Resting concentration of ion</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="decay_constant" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>Exponential decay time of pool </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:sequence>
+                <xs:element name="pool_volume_info" type="PoolVolumeInfo"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>   
+    
+    <xs:complexType name = "PoolVolumeInfo">
+        <xs:annotation>
+            <xs:documentation>Information on the volume of the ion pool</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>At the moment only allowable format is the thichness of the shell inside
+                the membrane. This will have to be multiplied by the surface area of the relevant compartment</xs:documentation>
+            </xs:annotation>
+            <xs:element name="shell_thickness" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>    
+
+        
+
+        
+    <xs:complexType name = "Parameter">
+        <xs:annotation>
+            <xs:documentation>Generic parameter used in rate equations</xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:group ref="meta:metadata"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:double" use="required"/>
+    </xs:complexType>
+        
+    
+    <!-- Definition of Units follows. -->
+    <xs:simpleType name="Units">
+        <xs:annotation>
+            <xs:documentation>Enumeration of unit scheme used. Only SI or Physiological units allowed</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Physiological Units"/> <!--  milisecond, millivolt, centimeter, etc  -->
+            <xs:enumeration value="SI Units"/> <!--  second, volt, meter, etc  -->
+        </xs:restriction>
+    </xs:simpleType>
+    
+        
+    <!-- Definition of core equation types follows. -->
+    <xs:simpleType name="CoreEquationType">
+        <xs:annotation>
+            <xs:documentation>Enumeration of core equation types, linoidal, sigmoidal, exponential</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="exponential"/>
+            <xs:enumeration value="sigmoid"/>
+            <xs:enumeration value="linoid"/>
+        </xs:restriction>
+    </xs:simpleType>
+        
+</xs:schema>

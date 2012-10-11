@@ -1,0 +1,29 @@
+<jxb:bindings version="2.0"
+               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<jxb:bindings schemaLocation="../Metadata_v1.3.xsd" node="/xs:schema">	
+	    	         
+    	<jxb:schemaBindings>			
+    		<jxb:package name="org.neuroml1.model.meta"/>    
+    	</jxb:schemaBindings>
+	    
+	</jxb:bindings>
+	
+	<jxb:bindings schemaLocation="../MorphML_v1.3.xsd" node="/xs:schema">	
+
+    	<jxb:schemaBindings>			
+    		<jxb:package name="org.neuroml1.model.morph"/>    		
+    	</jxb:schemaBindings>
+    		    
+	</jxb:bindings>
+	
+	<jxb:bindings schemaLocation="../NeuroML_Level1_v1.3.xsd" node="/xs:schema">	
+
+    	<jxb:schemaBindings>			
+    		<jxb:package name="org.neuroml1.model"/>    		
+    	</jxb:schemaBindings>    	
+    		    
+	</jxb:bindings>
+	
+</jxb:bindings>
