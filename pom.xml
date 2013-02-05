@@ -3,10 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.neuroml1.model</groupId>
 	<artifactId>org.neuroml1.model</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<build.version1>1.8.1</build.version1>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -33,7 +34,7 @@
 		<dependency>
 			<groupId>org.neuroml.model.injectingplugin</groupId>
 			<artifactId>org.neuroml.model.injectingplugin</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -42,6 +43,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -86,7 +88,7 @@
 								<plugin>
 									<groupId>org.neuroml.model.injectingplugin</groupId>
 									<artifactId>org.neuroml.model.injectingplugin</artifactId>
-									<version>1.0.0</version>
+									<version>1.0.1</version>
 								</plugin>
 							</plugins>
 						</configuration>
@@ -127,7 +129,7 @@
 								<plugin>
 									<groupId>org.neuroml.model.injectingplugin</groupId>
 									<artifactId>org.neuroml.model.injectingplugin</artifactId>
-									<version>1.0.0</version>
+									<version>1.0.1</version>
 								</plugin>
 							</plugins>
 						</configuration>
@@ -169,7 +171,7 @@
 								<plugin>
 									<groupId>org.neuroml.model.injectingplugin</groupId>
 									<artifactId>org.neuroml.model.injectingplugin</artifactId>
-									<version>1.0.0</version>
+									<version>1.0.1</version>
 								</plugin>
 							</plugins>
 						</configuration>

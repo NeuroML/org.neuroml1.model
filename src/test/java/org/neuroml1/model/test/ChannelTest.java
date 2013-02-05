@@ -74,11 +74,13 @@ public class ChannelTest
 		
 		
 		String wdir = System.getProperty("user.dir");
-		String tempdir = wdir + File.separator + "src/test/resources/tmp";
+        String tempdirname = wdir + File.separator + "src/test/resources/tmp";
+        File tempdir = new File(tempdirname);
+        if (!tempdir.exists()) tempdir.mkdir();
 		
 		NeuroMLConverter conv = new NeuroMLConverter();
-        String tempFile = tempdir + File.separator + "kca-channel.xml";
-		conv.channelToXml(chan, tempFile);
+        File tempFile = new File(tempdir,"kca-channel.xml");
+		conv.channelToXml(chan, tempFile.getAbsolutePath());
 
         System.out.println("Saved to: "+ tempFile);
 	}

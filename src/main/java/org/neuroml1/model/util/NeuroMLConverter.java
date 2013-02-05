@@ -41,6 +41,7 @@ public class NeuroMLConverter
 		File f = new File(xmlFile);
 		if (!f.exists()) throw new FileNotFoundException(f.getAbsolutePath());
 		
+		@SuppressWarnings("unchecked")
 		JAXBElement<NeuroMLLevel3> jbe =
 			(JAXBElement<NeuroMLLevel3>) unmarshaller.unmarshal(f);
 		
@@ -54,6 +55,7 @@ public class NeuroMLConverter
 		File f = new File(xmlFile);
 		if (!f.exists()) throw new FileNotFoundException(f.getAbsolutePath());
 		
+		@SuppressWarnings("unchecked")
 		JAXBElement<Morphology> jbe =
 			(JAXBElement<Morphology>) unmarshaller.unmarshal(f);
 		
@@ -65,6 +67,7 @@ public class NeuroMLConverter
 		File f = new File(xmlfile);
 		if (!f.exists()) throw new FileNotFoundException(f.getAbsolutePath());
 		
+		@SuppressWarnings("unchecked")
 		JAXBElement<ChannelML> jbe =
 			(JAXBElement<ChannelML>) unmarshaller.unmarshal(f);
 		
@@ -76,6 +79,7 @@ public class NeuroMLConverter
 		File f = new File(xmlfile);
 		if (!f.exists()) throw new FileNotFoundException(f.getAbsolutePath());
 		
+		@SuppressWarnings("unchecked")
 		JAXBElement<NetworkML> jbe =
 			(JAXBElement<NetworkML>) unmarshaller.unmarshal(f);
 		

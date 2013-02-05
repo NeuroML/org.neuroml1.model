@@ -1,2 +1,4 @@
+src/test/resources/tmp/
 target
 src/main/java/META-INF
+*.xml~
