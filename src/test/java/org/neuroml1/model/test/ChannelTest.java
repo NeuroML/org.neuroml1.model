@@ -72,16 +72,22 @@ public class ChannelTest
 		
 		ChannelML chan = obj.createChannelML();
 		
+	
 		
+		NeuroMLConverter conv = new NeuroMLConverter();
+        File tempFile = new File(getTempDir(),"kca-channel.xml");
+		conv.channelToXml(chan, tempFile.getAbsolutePath());
+
+        System.out.println("Saved to: "+ tempFile);
+	}
+	
+	protected static File getTempDir()
+	{
+
 		String wdir = System.getProperty("user.dir");
         String tempdirname = wdir + File.separator + "src/test/resources/tmp";
         File tempdir = new File(tempdirname);
         if (!tempdir.exists()) tempdir.mkdir();
-		
-		NeuroMLConverter conv = new NeuroMLConverter();
-        File tempFile = new File(tempdir,"kca-channel.xml");
-		conv.channelToXml(chan, tempFile.getAbsolutePath());
-
-        System.out.println("Saved to: "+ tempFile);
+		return tempdir;
 	}
 }

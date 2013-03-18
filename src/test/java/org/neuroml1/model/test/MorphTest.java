@@ -39,11 +39,9 @@ public class MorphTest
 		List<Cell> clist = morph.getCellList();
 		clist.add(c);
 
-		String wdir = System.getProperty("user.dir");
-		String tempdir = wdir + File.separator + "src/test/resources/tmp";
 		
 		NeuroMLConverter conv = new NeuroMLConverter();
-        String tempFile = tempdir + File.separator + "simple-cell.xml";
+        String tempFile = ChannelTest.getTempDir() + File.separator + "simple-cell.xml";
 		conv.morphologyToXml(morph, tempFile);
 
         System.out.println("Saved to: "+ tempFile);
