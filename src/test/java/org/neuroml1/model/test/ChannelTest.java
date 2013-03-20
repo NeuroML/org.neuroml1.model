@@ -14,6 +14,7 @@ import org.neuroml1.model.channel.ObjectFactory;
 import org.neuroml1.model.channel.Offset;
 import org.neuroml1.model.channel.OpenState;
 import org.neuroml1.model.channel.Q10Settings;
+import org.neuroml1.model.util.NeuroML1Validator;
 import org.neuroml1.model.util.NeuroMLConverter;
 
 public class ChannelTest
@@ -62,9 +63,36 @@ public class ChannelTest
 		OpenState os = g.getOpenState().get(0);
 		
 		assertTrue(os.getFraction() == 1.0);
+		
+
+        File tempFile = new File(getTempDir(),"kca-write.xml");
+		conv.channelToXml(chan, tempFile.getAbsolutePath());
+
+        System.out.println("Saved to a file: "+ tempFile);
+
+		assertTrue(tempFile.exists());
 
         System.out.println("All done..");
+        
 	}
+
+	
+    @Test public void testValidate() throws Exception
+    {
+
+		String wdir = System.getProperty("user.dir");
+		String tdir = wdir + File.separator + "src/test/resources";
+		String fpath = tdir + File.separator +"CompleteNetwork.xml";
+
+        System.out.println("Performing test on "+fpath);
+        File tempFile = new File(fpath);
+
+		assertTrue(tempFile.exists());
+
+		NeuroML1Validator val = new NeuroML1Validator();
+
+		val.validateWithTests(tempFile);
+    }
 	
 	@Test public void testKCaChannelMarshalling() throws Exception
 	{
@@ -78,7 +106,10 @@ public class ChannelTest
         File tempFile = new File(getTempDir(),"kca-channel.xml");
 		conv.channelToXml(chan, tempFile.getAbsolutePath());
 
-        System.out.println("Saved to: "+ tempFile);
+        System.out.println("Saved to a file: "+ tempFile);
+
+		assertTrue(tempFile.exists());
+        
 	}
 	
 	protected static File getTempDir()
