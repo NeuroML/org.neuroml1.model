@@ -137,6 +137,8 @@ public class NeuroML1Validator {
         Source xmlFileSource = new StreamSource(xmlFile);
 
         validator.validate(xmlFileSource);
+        
+        System.out.println("File: "+ xmlFile.getAbsolutePath()+" is valid!!");
  
     }
 
