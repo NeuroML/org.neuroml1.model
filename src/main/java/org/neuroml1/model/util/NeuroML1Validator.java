@@ -38,7 +38,7 @@ public class NeuroML1Validator {
         
         //TODO: replace!!
 		String wdir = System.getProperty("user.dir");
-		File xsdFile = new File(wdir + File.separator + "hhsrc/main/resources/NeuroML1Schemas/Level3/NeuroML_Level3_v1.8.1.xsd");
+		File xsdFile = new File(wdir + File.separator + "src/main/resources/NeuroML1Schemas/Level3/NeuroML_Level3_v1.8.1.xsd");
         if (!xsdFile.exists())
         {
             //Temp hack...
