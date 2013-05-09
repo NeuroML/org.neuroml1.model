@@ -44,6 +44,11 @@ public class NeuroML1Validator {
             //Temp hack...
             String jnmlHome = System.getenv("JNML_HOME");
             xsdFile = new File(jnmlHome + File.separator +".." + File.separator + "org.neuroml1.model/src/main/resources/NeuroML1Schemas/Level3/NeuroML_Level3_v1.8.1.xsd");
+            if (!xsdFile.exists())
+            {
+                //Temp hack...
+                xsdFile = new File(jnmlHome + File.separator +"../.." + File.separator + "org.neuroml1.model/src/main/resources/NeuroML1Schemas/Level3/NeuroML_Level3_v1.8.1.xsd");
+            }
         }
         validateAgainstSchema(xmlFile, xsdFile);
  
@@ -113,7 +118,6 @@ public class NeuroML1Validator {
 
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-
         Schema schema = factory.newSchema(schemaFileSource);
 
         Validator validator = schema.newValidator();
@@ -141,9 +145,14 @@ public class NeuroML1Validator {
         System.out.println("File: "+ xmlFile.getAbsolutePath()+" is valid!!");
  
     }
+    
 
-	public static void main(String[] args) {
-		System.out.println("Testing...");
+    public static void main(String[] args) throws SAXException, IOException, JAXBException {
+
+		System.out.println("Testing it...");
+		NeuroML1Validator nv = new NeuroML1Validator();
+		nv.validateWithTests(new File("/home/padraig/neuroConstruct/NeuroML2/examples/NMLv1.x/GranuleCell.xml"));
+
 	}
 
 }
