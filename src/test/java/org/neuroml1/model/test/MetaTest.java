@@ -18,7 +18,7 @@ public class MetaTest
 		List<Point> pntList = pnts.getPoint();
 		
 		Assert.assertTrue(pntList != null);
-		Assert.assertTrue(pntList.size() == 0);		
+		Assert.assertTrue(pntList.isEmpty());		
 		
 		Point p1 = ofac.createPoint();
 		Assert.assertTrue(p1 != null);

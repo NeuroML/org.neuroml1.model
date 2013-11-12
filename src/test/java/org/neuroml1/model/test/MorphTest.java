@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.neuroml1.model.Level3Cell;
@@ -16,6 +17,8 @@ import org.neuroml1.model.morph.Cell;
 import org.neuroml1.model.morph.Morphology;
 import org.neuroml1.model.morph.ObjectFactory;
 import org.neuroml1.model.morph.Segment;
+import static org.neuroml1.model.test.ChannelTest.getTempDir;
+import org.neuroml1.model.util.NeuroML1ValidatorTest;
 import org.neuroml1.model.util.NeuroMLConverter;
 
 public class MorphTest
@@ -32,6 +35,20 @@ public class MorphTest
 		Segment seg = ofac.createSegment();
 		seg.setId(new BigInteger("1"));
 		seg.setParent(new BigInteger("0"));
+        
+        Point prox = new Point();
+        prox.setX(0);
+        prox.setY(0);
+        prox.setZ(0);
+        prox.setDiameter(3.0);
+        seg.setProximal(prox);
+        
+        Point dist = new Point();
+        dist.setX(0);
+        dist.setY(20);
+        dist.setZ(0);
+        dist.setDiameter(3.0);
+        seg.setDistal(dist);
 		
 		List<Segment> seglist = c.getSegmentList();
 		seglist.add(seg);
@@ -41,10 +58,15 @@ public class MorphTest
 
 		
 		NeuroMLConverter conv = new NeuroMLConverter();
-        String tempFile = ChannelTest.getTempDir() + File.separator + "simple-cell.xml";
+        
+        String tempFile = ChannelTest.getTempDir() + File.separator + "morphology-as-morphml.xml";
 		conv.morphologyToXml(morph, tempFile);
+        File f = new File(tempFile);
 
-        System.out.println("Saved to: "+ tempFile);
+        System.out.println("Saved to: "+ f);
+        assertTrue(f.exists());
+        NeuroML1ValidatorTest.testValidate(f);
+        
 
 
 	}
