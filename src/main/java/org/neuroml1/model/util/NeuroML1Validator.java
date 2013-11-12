@@ -28,13 +28,11 @@ public class NeuroML1Validator {
 		
 	}
 	
-
 	public boolean validateWithTests(File xmlFile) throws SAXException, IOException, JAXBException
 	{
 		InputStream in = getClass().getResourceAsStream("/NeuroML1Schemas/Level3/NeuroML_Level3_v1.8.1.xsd");
 
 		//testValidity(xmlFile, new StreamSource(in));
-
         
         //TODO: replace!!
 		String wdir = System.getProperty("user.dir");
@@ -60,52 +58,7 @@ public class NeuroML1Validator {
 		return true;
 		
 	}
-	/*
-	public boolean validateWithTests(NeuroMLDocument nml2)
-	{
-		
-		// Checks the areas the Schema just can't reach...
-		
-		//////////////////////////////////////////////////////////////////
-		// <cell>
-		//////////////////////////////////////////////////////////////////
-		
-		for (Cell cell: nml2.getCell()){
-			
-			// Morphologies
-			ArrayList<Integer> segIds = new ArrayList<Integer>();
-			boolean rootFound = false;
-			if (cell.getMorphology() != null) {
-				for(Segment segment: cell.getMorphology().getSegment()) {
-					int segId = Integer.parseInt(segment.getId());
-					
-					test(10000, "No repeated segment Ids allowed within a cell", "Current segment ID: "+segId, !segIds.contains(segId));
-					segIds.add(segId);
-					
-					if (segId==0){
-						rootFound = true;
-					}
-				}
 
-				test(10001,"Root segment has id == 0", "", rootFound);
-			} else {
-				//TODO: test for morphology attribute!
-			}
-			
-		}
-		
-		return allTestsPassed;
-		
-	}
-	
-	private void test(int id, String testName, String info, boolean test) {
-		if (!test) {
-	        System.out.println("Test: "+id+" ("+testName+") failed! .. "+info);
-	        allTestsPassed = false;
-		} else {
-	        //System.out.println("Test: "+id+" ("+testName+") succeeded! "+info);
-		}
-	}*/
 
 
 	public static void testValidity(File xmlFile, String xsdFile) throws SAXException, IOException {
