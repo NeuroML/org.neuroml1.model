@@ -13,3 +13,4 @@ and the files have been under development on the [NeuroML Sourceforge repository
 
 A collection of models in NeuroML can be found at [Open Source Brain](http://www.opensourcebrain.org).
 
+This code is distributed under the terms of the GNU Lesser General Public License.
