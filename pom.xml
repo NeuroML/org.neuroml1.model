@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.neuroml1.model</groupId>
 	<artifactId>org.neuroml1.model</artifactId>
-	<version>1.4.4</version>
+	<version>1.4.5</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<build.version1>1.8.1</build.version1>
