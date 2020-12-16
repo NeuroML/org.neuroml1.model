@@ -15,4 +15,4 @@ A collection of models in NeuroML can be found at [Open Source Brain](http://www
 
 This code is distributed under the terms of the GNU Lesser General Public License.
 
-[![Build Status](https://travis-ci.org/NeuroML/org.neuroml1.model.svg?branch=master)](https://travis-ci.org/NeuroML/org.neuroml1.model)
+[![Build Status](https://travis-ci.com/NeuroML/org.neuroml1.model.svg?branch=master)](https://travis-ci.com/NeuroML/org.neuroml1.model)
