@@ -1,18 +1,22 @@
 NeuroML v1.8.1 Model Java API
 =============================
 
+[![Travis CI](https://travis-ci.com/NeuroML/org.neuroml1.model.svg?branch=master)](https://travis-ci.com/NeuroML/org.neuroml1.model)
+[![GitHub](https://img.shields.io/github/license/NeuroML/org.neuroml1.model)](https://github.com/NeuroML/org.neuroml1.model/blob/master/LICENSE.lesser)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/NeuroML/org.neuroml1.model)](https://github.com/NeuroML/org.neuroml1.model/pulls)
+[![GitHub issues](https://img.shields.io/github/issues/NeuroML/org.neuroml1.model)](https://github.com/NeuroML/org.neuroml1.model/issues)
+[![GitHub Org's stars](https://img.shields.io/github/stars/NeuroML?style=social)](https://github.com/NeuroML)
+[![Twitter Follow](https://img.shields.io/twitter/follow/NeuroML?style=social)](https://twitter.com/NeuroML)
+
 NeuroML is an international, collaborative initiative to develop standards for the exchange of models of neuronal systems and to 
 allow for greater transparency and accessibility of these complex models.
 
-This Java library is a work in progress aimed at providing a programmatic way to access models stored in NeuroML version 1.8.1.
+**NeuroML version 1 is now deprecated. Please use NeuroML version 2.**
 
-More details can be found on the official [NeuroML website](http://www.neuroml.org). 
-
-Note the schemas for NeuroML version 1.8.1 are outlined here: http://www.neuroml.org/specifications.php, 
-and the files have been under development on the [NeuroML Sourceforge repository](https://sourceforge.net/p/neuroml/code/HEAD/tree/trunk/web/NeuroMLFiles/Schemata/v1.8.1/). 
+This Java library provides a programmatic way to access models stored in NeuroML version 1.8.1.
 
 A collection of models in NeuroML can be found at [Open Source Brain](http://www.opensourcebrain.org).
 
 This code is distributed under the terms of the GNU Lesser General Public License.
 
-[![Build Status](https://travis-ci.org/NeuroML/org.neuroml1.model.svg?branch=master)](https://travis-ci.org/NeuroML/org.neuroml1.model)
+The API documentation is [here](http://neuroml.github.io/org.neuroml1.model/).
