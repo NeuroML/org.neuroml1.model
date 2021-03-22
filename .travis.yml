@@ -1,13 +1,14 @@
-dist: trusty
+dist: xenial
 sudo: false
 
 language: java
 
 jdk:
-  - openjdk7
+  - oraclejdk11 
+  
   - openjdk8
-  - oraclejdk8
-  # - oraclejdk9
+  - openjdk10
+  - openjdk11
 
 install:
     - export main_repo_branch=$TRAVIS_BRANCH
@@ -15,6 +16,7 @@ install:
     - cd org.neuroml.model.injectingplugin
     - git checkout $main_repo_branch
     - mvn install
+    - mvn dependency:tree
     - cd ..
 
     
