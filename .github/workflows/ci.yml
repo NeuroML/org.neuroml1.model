@@ -15,11 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11']
-
-
-
-        
+        java: [ '8', '10', '11', '13', '15' ]
 
     name: Test on Java ${{ matrix.Java }}
     steps:
@@ -31,7 +27,8 @@ jobs:
         distribution: 'adopt'
     - name: Install org.neuroml.model.injectingplugin
       run: |
-        export main_repo_branch=development
+        export main_repo_branch=${GITHUB_REF##*/}
+        echo Using branch $main_repo_branch
         git clone https://github.com/NeuroML/org.neuroml.model.injectingplugin.git
         cd org.neuroml.model.injectingplugin
         git checkout $main_repo_branch
