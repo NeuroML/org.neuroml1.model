@@ -7,9 +7,9 @@ NeuroML v1.8.1 Model Java API
 [![GitHub issues](https://img.shields.io/github/issues/NeuroML/org.neuroml1.model)](https://github.com/NeuroML/org.neuroml1.model/issues)
 [![GitHub Org's stars](https://img.shields.io/github/stars/NeuroML?style=social)](https://github.com/NeuroML)
 [![Twitter Follow](https://img.shields.io/twitter/follow/NeuroML?style=social)](https://twitter.com/NeuroML)
+[![Gitter](https://badges.gitter.im/NeuroML/community.svg)](https://gitter.im/NeuroML/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-NeuroML is an international, collaborative initiative to develop standards for the exchange of models of neuronal systems and to 
-allow for greater transparency and accessibility of these complex models.
+NeuroML is an international, collaborative initiative to develop standards for the exchange of models of neuronal systems and to allow for greater transparency and accessibility of these complex models.
 
 **NeuroML version 1 is now deprecated. Please use NeuroML version 2.**
 
