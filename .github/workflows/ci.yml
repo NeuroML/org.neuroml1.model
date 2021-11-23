@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         java: [ '8', '11', '16', '17' ]
-        runs-on: [ubuntu-latest, macos-11 ]
+        runs-on: [ubuntu-latest, macos-11, windows-latest ]
 
     name: Test on Java ${{ matrix.Java }} on ${{ matrix.runs-on }}
     steps:
@@ -28,12 +28,13 @@ jobs:
         java-version: ${{ matrix.Java }}
         distribution: 'temurin'
     - name: Install org.neuroml.model.injectingplugin
+      env: 
+        main_repo_branch: ${GITHUB_REF##*/}
       run: |
-        export main_repo_branch=${GITHUB_REF##*/}
-        echo Using branch $main_repo_branch
+        echo "Using branch ${{env.main_repo_branch}}"
         git clone https://github.com/NeuroML/org.neuroml.model.injectingplugin.git
         cd org.neuroml.model.injectingplugin
-        git checkout $main_repo_branch
+        git checkout ${{env.main_repo_branch}}
         mvn install
         cd ..
     - name: Install and test with Maven
@@ -43,5 +44,4 @@ jobs:
     - name: Further tests
       run: |
         pwd
-        ls -alt
         mvn dependency:tree
