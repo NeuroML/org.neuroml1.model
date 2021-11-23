@@ -36,7 +36,7 @@ jobs:
         git checkout $main_repo_branch
         mvn install
         cd ..
-    - name: Test with Maven
+    - name: Install and test with Maven
       run: |
          pwd
          mvn install
