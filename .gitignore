@@ -3,3 +3,7 @@ target
 src/main/java/META-INF
 *.xml~
 /nb-configuration.xml
+/.classpath
+/.project
+/.settings
+/private
