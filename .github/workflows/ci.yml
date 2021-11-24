@@ -27,9 +27,10 @@ jobs:
       with:
         java-version: ${{ matrix.Java }}
         distribution: 'temurin'
+        
     - name: Install org.neuroml.model.injectingplugin
       env: 
-        main_repo_branch: ${{GITHUB_REF##*/}}
+        main_repo_branch: ${GITHUB_REF_NAME}
       run: |
         echo "Using branch ${{env.main_repo_branch}}"
         git clone https://github.com/NeuroML/org.neuroml.model.injectingplugin.git
