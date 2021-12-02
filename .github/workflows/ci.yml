@@ -33,10 +33,12 @@ jobs:
         main_repo_branch: ${GITHUB_REF_NAME}
       if: ${{ matrix.runs-on != 'windows-latest' }}
       run: |
-        echo "Using branch ${{env.main_repo_branch}}"
+        export main_repo_branch=${{env.main_repo_branch}}
+        if [[ ${main_repo_branch} != "master" && ${main_repo_branch} != "development" && ${main_repo_branch} != "experimental" && ${main_repo_branch} != *"osb"* ]]; then main_repo_branch=development ; fi
+        echo Using branch $main_repo_branch
         git clone https://github.com/NeuroML/org.neuroml.model.injectingplugin.git
         cd org.neuroml.model.injectingplugin
-        git checkout ${{env.main_repo_branch}}
+        git checkout $main_repo_branch
         mvn install
         cd ..
         
