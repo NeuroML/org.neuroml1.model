@@ -16,6 +16,7 @@ jobs:
       with:
         java-version: 17
         java-package: jdk
+        distribution: 'temurin'
 
     - name: Set up Python 3.9
       uses: actions/setup-python@v5
