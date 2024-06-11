@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.neuroml1.model"},{"l":"org.neuroml1.model.bio"},{"l":"org.neuroml1.model.channel"},{"l":"org.neuroml1.model.meta"},{"l":"org.neuroml1.model.morph"},{"l":"org.neuroml1.model.network"},{"l":"org.neuroml1.model.util"}];updateSearchResults();
