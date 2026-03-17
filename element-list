@@ -1,0 +1,7 @@
+org.neuroml1.model
+org.neuroml1.model.bio
+org.neuroml1.model.channel
+org.neuroml1.model.meta
+org.neuroml1.model.morph
+org.neuroml1.model.network
+org.neuroml1.model.util
